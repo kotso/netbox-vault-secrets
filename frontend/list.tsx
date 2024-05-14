@@ -37,13 +37,11 @@ const Secret: FunctionComponent<{
         {isRevealed && data?.value ? data.value : "***********"}
       </td>
       <td class="text-end noprint">
-      <a
-          class={buttonClass("btn-primary")}
+        <a
+          class={buttonClass("btn-primary") + (isRevealed && data?.value && data?.version === meta.version ? '' : " disabled")}
           title="Copy Secret"
-          onClick={() => {
-            getSecret().then(({ data }) => {
-              navigator.clipboard.writeText(data?.value ?? "")
-            });
+          onClick={e => {
+            navigator.clipboard.writeText(data?.value ?? "")
           }}
         >
           <i class="mdi mdi-content-copy"></i>
