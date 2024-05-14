@@ -1,5 +1,5 @@
 from importlib.metadata import metadata
-from extras.plugins import PluginConfig
+from netbox.plugins import PluginConfig
 
 meta = metadata('netbox_vault_secrets')
 

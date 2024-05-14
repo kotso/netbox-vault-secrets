@@ -1,6 +1,6 @@
 import os
 
-from extras.plugins import PluginTemplateExtension
+from netbox.plugins import PluginTemplateExtension
 
 
 class VaultSecretInserter(PluginTemplateExtension):
