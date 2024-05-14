@@ -17,17 +17,18 @@ const Secret: FunctionComponent<{
   handleDelete: () => void;
 }> = ({ meta, getSecret, handleEdit, handleDelete }) => {
   const [isRevealed, setIsRevealed] = useState(false);
+  const [shouldFetch, setShouldFetch] = useState(false);
   const [data, setData] = useState<{
     value: string;
     version: number;
   } | null>(null);
   useEffect(() => {
-    if (isRevealed && (!data?.value || data?.version !== meta.version)) {
+    if ((isRevealed || shouldFetch) && (!data?.value || data?.version !== meta.version)) {
       getSecret().then(({ data, metadata }) =>
         setData(data && { value: data.password, version: metadata.version })
       );
     }
-  }, [getSecret, isRevealed, data, meta.version]);
+  }, [getSecret, isRevealed, shouldFetch, data, meta.version]);
 
   return (
     <tr>
@@ -38,13 +39,18 @@ const Secret: FunctionComponent<{
       </td>
       <td class="text-end noprint">
         <a
-          class={buttonClass("btn-primary") + (isRevealed && data?.value && data?.version === meta.version ? '' : " disabled")}
+          class={buttonClass("btn-primary")}
           title="Copy Secret"
-          onClick={e => {
+          onClick={() => {
+            if ((isRevealed || shouldFetch) && data?.value && data?.version === meta.version) {
+              setShouldFetch(true);
+              return;
+            }
+
             navigator.clipboard.writeText(data?.value ?? "")
           }}
         >
-          <i class="mdi mdi-content-copy"></i>
+          {(isRevealed || shouldFetch) && data?.value && data?.version === meta.version ? <i class="mdi mdi-content-copy"></i> : <i class="mdi mdi-refresh"></i>}
         </a>{" "}
         <a
           class={buttonClass(buttonColor(isRevealed))}
